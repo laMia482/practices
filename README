@@ -1,0 +1,22 @@
+learning tensorlayer 
+
+pip install tensorflow-gpu
+pip install tensorlayer
+
+for easy use, do ' ./run.sh --test_example ' which will execute example.py
+
+main.py
+  to start
+
+data/dataloader.py
+  constains methods to restore different dataset
+
+models/model.py
+  by importing different net to select network for training and testing
+  use corresponding load_*_dataset in _load_data()
+
+models/*_net.py
+  base_net is considered as a base class containing several neccessary method for using
+  dense_net and conv_net are inherited from base_net, some methods of them are re-written 
+    to fit new situation
+
