@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 flags = tf.app.flags
-flags.DEFINE_bool('test_example', False, 'switch to use an easy example')
+flags.DEFINE_bool('test_example', True, 'switch to use an easy example')
 flags.DEFINE_bool('is_train', True, 'switch for train or not')
 flags.DEFINE_bool('is_eval', True, 'switch for eval or not')
 flags.DEFINE_bool('is_predict', True, 'switch for use sample prediction or not')
