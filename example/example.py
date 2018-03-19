@@ -1,3 +1,4 @@
+import numpy as np
 import tensorflow as tf
 import tensorlayer as tl
 
@@ -35,16 +36,52 @@ def classify():
   network.print_layers()
 
   tl.utils.fit(sess, network, train_op, cost, X_train, y_train, x, y_, acc = acc, batch_size = 500, 
-            n_epoch = 10, print_freq = 5, X_val = X_val, y_val = y_val, eval_train = False)
+            n_epoch = 10, print_freq = 1, X_val = X_val, y_val = y_val, eval_train = False)
 
   tl.utils.test(sess, network, acc, X_test, y_test, x, y_, batch_size = None, cost = cost)
 
   tl.files.save_npz(network.all_params, name = 'ckpts/model.npz')
   sess.close()
 
+def linear():
+  sess_config = tf.ConfigProto()
+  sess_config.gpu_options.allow_growth = True
+  sess = tf.InteractiveSession(config = sess_config)
+    
+  trX = np.linspace(-1, 1, 101)  
+  # trY = 2 * trX + np.ones(*trX.shape) * 4 + np.random.randn(*trX.shape) * 0.03
+  trY = 2 * trX + np.random.randn(*trX.shape) * 0.03
+  trX = trX.reshape([-1, 1])
+  trY = trY.reshape([-1])
+  X = tf.placeholder(tf.float32, shape = [None, 1])
+  Y = tf.placeholder(tf.float32, shape = [None])
+    
+  def model(X, w, b):  
+    # return X * w + b
+    return tf.matmul(X, w) + b
+    
+  w = tf.Variable(0.0, name="weights")  
+  b = tf.Variable(0.0, name="biases")  
+  y_model = model(X, [[w]], b)  
+    
+  cost = tf.square(Y - y_model)
+  train_op = tf.train.GradientDescentOptimizer(0.01).minimize(cost)
+  init = tf.initialize_all_variables()  
+  sess.run(init)  
+
+  for i in range(10):
+    for (x, y) in zip(trX, trY):
+      _, w_val, b_val = sess.run([train_op, w, b], feed_dict={X: [x], Y: [y]})
+    print('[*] epoch: {:2d}, w: {:.6f}, b: {:.6f}'.format(i, w_val, b_val))
+
+  print('[*] test begins')
+  x = np.array([-0.4, -0.8, 1.0, 0.5, 0.4, -0.8, 0.0, 0.7]).reshape([-1, 1])
+  y_val = sess.run(y_model, feed_dict={X: x})
+  print('x: \n{}'.format(x))
+  print('y: \n{}'.format(y_val))
 
 def main(_):
-  classify()
+  linear()
 
 
 if __name__ == '__main__':

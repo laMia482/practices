@@ -3,7 +3,7 @@ learning tensorlayer
 pip install tensorflow-gpu
 pip install tensorlayer
 
-for easy use, do ' ./run.sh --test_example ' which will execute example.py
+for easy use, do ' ./run.sh --test_example=True ' which will execute example.py
 
 main.py
   to start

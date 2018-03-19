@@ -12,3 +12,9 @@ def relu1(x, vmin = 0., vmax = 1.):
   '''
   y = tf.maximum(tf.minimum(x, vmax), vmin)
   return y
+
+def l2norm(x, dim = 1):
+  '''
+  '''
+  y = tf.nn.l2_normalize(x, dim = dim)
+  return y

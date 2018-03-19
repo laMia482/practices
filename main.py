@@ -1,15 +1,14 @@
 from conf.conf import config as cfg
-from nets.cifar_conv_net import CifarConvNet as WorkingNet
-from models.model import Model
-
 
 def main():
   '''
   '''
   if cfg.test_example is True:
     import example.example
-    example.example.classify()
+    example.example.linear()
   else:
+    from nets.cifar_conv_net import CifarConvNet as WorkingNet
+    from models.model import Model
     model = Model(cfg = cfg, input_network = WorkingNet)
     if cfg.is_train is True:
       model.train()
