@@ -54,7 +54,7 @@ class Model:
   def train(self, x = None, y = None, learning_rate = 0.001, x_test = None, y_test = None, batch_size_test = 32):
     '''
     '''
-    if x is None or y is None:      
+    if x is None or y is None:
       x1, y1= self._load_data(self._cfg.train_file)
     else:
       x1, y1 = x, y
@@ -124,7 +124,7 @@ class Model:
   def eval(self, x = None, y = None):
     '''
     '''
-    if None in [x.tolist(), y.tolist()]:      
+    if x is None or y is None:
       x3, y3= self._load_data(self._cfg.eval_file)
     else:
       x3, y3 = x, y
