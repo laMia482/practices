@@ -89,6 +89,7 @@ class Model:
       else: 
         print('[*] failed to restore from a exsiting model for fine-tuning, set initialized')
     else:
+      print('[*] weights set initialized')
       tl.layers.initialize_global_variables(self._sess)
     self._net.print_params()
     self._net.print_layers()
@@ -109,12 +110,12 @@ class Model:
         break
       if cur_epoch % self._cfg.show_every_n_epoch == 0 and cur_epoch != epoch:
         epoch = cur_epoch
-        print('[*] reach {:3d}-th epoch, train loss: {:.6f}, acc: {:.6f}, test loss: {:.6f}, acc: {:.6f}'\
+        print('[*] reach {:3d}-th epoch, train loss: {:.6f}\t, acc: {:.6f}, test loss: {:.6f}\t, acc: {:.6f}'\
           .format(cur_epoch, loss_train_val, acc_train_val, loss_test_val, acc_test_val))
       else:
         if iters % self._cfg.show_every_n_iter == 0:
-          print('[*] iters: {:6d}, train loss: {:.6f}, acc: {:.6f}, test loss: {:.6f}, acc: {:.6f}'\
-          .format(cur_epoch, loss_train_val, acc_train_val, loss_test_val, acc_test_val))
+          print('[*] iters: {:6d}, train loss: {:.6f}\t, acc: {:.6f}, test loss: {:.6f}\t, acc: {:.6f}'\
+          .format(iters, loss_train_val, acc_train_val, loss_test_val, acc_test_val))
     
     # tl.files.save_ckpt(self._sess, save_dir = self._cfg.save_path, mode_name = 'model.ckpt')
     # tl.files.save_npz(sess = self._sess, save_list = self._net.all_params, name = os.path.join(self._cfg.save_path, 'model.npz'))
@@ -134,11 +135,11 @@ class Model:
     self.load_npz(filename = os.path.join(self._cfg.save_path, 'model.npz'))
     precious = self._model.get_precious(self._predictions, self._ground_truth)
     cost = self._model.get_loss(self._predictions, self._ground_truth)
-    current_batch_size = 1024
+    current_batch_size = y3.shape[0]
     print('[*] start eval')
     while True:
       try:
-        tl.utils.test(self._sess, self._net, precious, x3, y3, self._inputs, self._ground_truth, batch_size = y3.shape[0], cost = cost)
+        tl.utils.test(self._sess, self._net, precious, x3, y3, self._inputs, self._ground_truth, batch_size = current_batch_size, cost = cost)
       except Exception:
         current_batch_size = int(current_batch_size / 2)
         print('Exception: not enough memory for using, trying smaller batch size as {}'.format(current_batch_size))

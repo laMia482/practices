@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow as tf
 import tensorlayer as tl
+exporter = tf.contrib.session_bundle.exporter
 
 def classify():
   sess_config = tf.ConfigProto()
@@ -79,6 +80,23 @@ def linear():
   y_val = sess.run(y_model, feed_dict={X: x})
   print('x: \n{}'.format(x))
   print('y: \n{}'.format(y_val))
+  return
+  # below to convert to serveing model
+  saver = tf.train.Saver()
+  saver.save(sess, 'ckpts/model.ckpt')
+  saver.restore(sess, 'ckpts/model.ckpt')
+  model_exporter = exporter.Exporter(saver)
+  model_exporter.init(
+    sess.graph.as_graph_def(),
+    named_graph_signatures = {
+      'inputs': exporter.generic_signature({'x': X}),
+      'outputs': exporter.generic_signature({'y': y_model})})
+  model_exporter.export('ckpts',         
+                      tf.constant(1.1), sess)
+  return
+
+def launch():
+  linear()
 
 def main(_):
   linear()

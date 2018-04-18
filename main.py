@@ -5,7 +5,7 @@ def main():
   '''
   if cfg.test_example is True:
     import example.example
-    example.example.linear()
+    example.example.launch()
   else:
     from nets.cifar_conv_net import CifarConvNet as WorkingNet
     from models.model import Model
